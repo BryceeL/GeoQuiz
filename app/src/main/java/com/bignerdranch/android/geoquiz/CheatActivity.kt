@@ -17,16 +17,12 @@ private const val EXTRA_ANSWER_IS_TRUE = "com.bignerdranch.android.geoquiz.answe
 class CheatActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCheatBinding
 
-    private val cheatViewModel: CheatViewModel by viewModels()
-
     private var answerIsTrue = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCheatBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        cheatViewModel.isCheating(false)
 
         //get boolean values from respective Extras
         answerIsTrue = intent.getBooleanExtra(EXTRA_ANSWER_IS_TRUE, false)
@@ -37,9 +33,7 @@ class CheatActivity : AppCompatActivity() {
                 else -> R.string.false_button
             }
             binding.answerTextView.setText(answerText)
-
-            cheatViewModel.isCheating(true)
-            setAnswerShownResult(cheatViewModel.isCheater)
+            setAnswerShownResult(true)
         }
     }
 
@@ -49,7 +43,6 @@ class CheatActivity : AppCompatActivity() {
         val data = Intent().apply {
             putExtra(EXTRA_ANSWER_SHOWN, isAnswerShown)
         }
-        cheatViewModel.isCheating(true)
         setResult(Activity.RESULT_OK, data)
     }
 
@@ -62,15 +55,5 @@ class CheatActivity : AppCompatActivity() {
                 putExtra(EXTRA_ANSWER_IS_TRUE, answerIsTrue)
             }
         }
-    }
-
-    //This doesnt work
-    override fun onStop() {
-        val data = Intent().apply {
-            putExtra(EXTRA_ANSWER_SHOWN, cheatViewModel.isCheater)
-        }
-        setResult(Activity.RESULT_OK, data)
-        super.onStop()
-        Log.d(TAG, "onDestroy() called")
     }
 }
